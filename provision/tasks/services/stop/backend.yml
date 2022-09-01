@@ -1,0 +1,15 @@
+---
+# BACKEND
+- name: stop backend.service
+  systemd:
+    name: backend.service
+    state: stopped
+    enabled: false
+  when: "node_alias == 'node2'"
+
+- name: stop backend-sidecar-proxy.service
+  systemd:
+    name: backend-sidecar-proxy.service
+    state: stopped
+    enabled: false
+  when: "node_alias == 'node2'"

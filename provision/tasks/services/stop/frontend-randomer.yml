@@ -1,0 +1,15 @@
+---
+# FRONTEND
+- name: stop frontend.service
+  systemd:
+    name: frontend.service
+    state: stopped
+    enabled: false
+  when: "node_alias == 'node1'"
+
+- name: stop frontend-sidecar-proxy.service
+  systemd:
+    name: frontend-sidecar-proxy.service
+    state: stopped
+    enabled: false
+  when: "node_alias == 'node1'"

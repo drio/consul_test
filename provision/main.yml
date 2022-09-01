@@ -1,0 +1,93 @@
+---
+- hosts: ["server", "node1", "node2"]
+  become: yes
+
+  pre_tasks:
+    - name: Load configuration (with defaults from example file).
+      include_vars: "{{ item }}"
+      loop:
+        - config.yml
+      tags:
+        - always
+
+  tasks:
+    - name: Wait to make sure the userdata script is done
+      wait_for:
+        path: "/home/ubuntu/infra-done.txt"
+
+    - name: Full update of the OS
+      import_tasks: tasks/update.yml
+      tags: [ "fullupdate" ]
+
+    - name: Install packages
+      import_tasks: tasks/packages.yml
+      tags: [ "packages" ]
+
+    - name: copy files
+      import_tasks: tasks/copy_files.yml
+      tags: [ "copy-files" ]
+
+    - name: Print inventory hostname
+      debug: var=node_type
+      tags: [ "debug", "never" ]
+
+##########################
+# SERVICES (enable/start)
+##########################
+
+    - name: Restart service consul
+      import_tasks: tasks/services/enable/consul.yml
+      tags: [ "services-enable" ]
+
+    - name: Restart services frontend
+      import_tasks: tasks/services/enable/frontend.yml
+      tags: [ "services-enable" ]
+
+    - name: Restart services backend
+      import_tasks: tasks/services/enable/backend.yml
+      tags: [ "services-enable" ]
+
+    - name: Restart services frontend-randomer
+      import_tasks: tasks/services/enable/frontend-randomer.yml
+      tags: [ "services-enable" ]
+
+    - name: Restart services backend-randomer
+      import_tasks: tasks/services/enable/backend-randomer.yml
+      tags: [ "services-enable" ]
+
+    - name: Restart services ingress
+      import_tasks: tasks/services/enable/ingress.yml
+      tags: [ "services-enable" ]
+
+    - name: Run consul config entries
+      shell: |
+        consul config write proxy-defaults-entry.hcl
+        consul config write ingress-gateway-entry.hcl
+      when: "node_alias == 'server'"
+      args:
+        chdir: "/home/ubuntu"
+      tags: [ "run-entries" ]
+
+#################
+# NEVER
+##################
+    - name: Stop services frontend
+      import_tasks: tasks/services/stop/frontend.yml
+      tags: [ "services-stop", "never" ]
+
+    - name: Stop services backend
+      import_tasks: tasks/services/stop/backend.yml
+      tags: [ "services-stop", "never" ]
+
+    - name: Stop consul
+      import_tasks: tasks/services/stop/consul.yml
+      tags: [ "services-stop", "never" ]
+
+    - name: service status
+      shell: systemctl --type service --all | grep -P "consul|frontend|backend"
+      register: service_status
+      tags: [ "services-status", "never" ]
+
+    - debug: var=service_status.stdout_lines
+      tags: [ "services-status", "never" ]
+

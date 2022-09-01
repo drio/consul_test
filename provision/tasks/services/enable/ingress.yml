@@ -1,0 +1,8 @@
+---
+- name: enable ingress-gateway.service
+  systemd:
+    name: ingress-gateway
+    state: restarted
+    daemon_reload: yes
+    enabled: yes
+  when: "node_alias == 'node1'"

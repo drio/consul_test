@@ -1,0 +1,9 @@
+---
+- name: Install packages
+  package:
+    name:
+      - git
+      - net-tools
+      - nmap
+      - jq
+    state: latest

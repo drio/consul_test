@@ -1,0 +1,7 @@
+---
+- name: stop ingress-gateway.service
+  systemd:
+    name: ingress-gateway
+    state: stopped
+    enabled: false
+  when: "node_alias == 'node1'"

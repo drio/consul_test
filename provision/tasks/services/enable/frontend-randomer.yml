@@ -1,0 +1,17 @@
+---
+# frontend-randomer
+- name: enable frontend-randomer.service
+  systemd:
+    name: frontend-randomer
+    state: restarted
+    daemon_reload: yes
+    enabled: yes
+  when: "node_alias == 'node1'"
+
+- name: enable frontend-randomer-sidecar-proxy.service
+  systemd:
+    name: frontend-randomer-sidecar-proxy
+    state: restarted
+    daemon_reload: yes
+    enabled: yes
+  when: "node_alias == 'node1'"

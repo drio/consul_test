@@ -1,0 +1,109 @@
+---
+- name: Copy templates to (server)
+  template: 
+    src: "{{ item.src }}"
+    dest: "{{ item.dst }}"
+    mode: 0755
+  loop:
+    - src: templates/server.hcl.j2
+      dst: /etc/consul.d/consul.hcl
+  when: "node_type == 'server'"
+
+- name: Copy files to (server)
+  copy: 
+    src: "{{ item.src }}"
+    dest: "{{ item.dst }}"
+    mode: 0755
+  loop:
+    # entries (ingress and proxy)
+    - src: files/entries/ingress-gateway-entry.hcl
+      dst: /home/ubuntu/ingress-gateway-entry.hcl
+    - src: files/entries/proxy-defaults-entry.hcl
+      dst: /home/ubuntu/proxy-defaults-entry.hcl
+  when: "node_type == 'server'"
+
+
+
+
+- name: Copy templates to (node1)
+  template: 
+    src: "{{ item.src }}"
+    dest: "{{ item.dst }}"
+    mode: 0755
+  loop:
+    - src: templates/client.hcl.j2
+      dst: /etc/consul.d/consul.hcl
+  when: "node_alias == 'node1'"
+
+- name: Copy files to (node1)
+  copy: 
+    src: "{{ item.src }}"
+    dest: "{{ item.dst }}"
+    mode: 0755
+  loop:
+    # birds FE + sidecar + hcl
+    - src: files/birds/frontend.hcl
+      dst: /etc/consul.d/frontend.hcl
+    - src: files/birds/frontend.service
+      dst: /etc/systemd/system/frontend.service
+    - src: files/birds/frontend-sidecar-proxy.service
+      dst: /etc/systemd/system/frontend-sidecar-proxy.service
+    - src: files/birds/frontend
+      dst: /usr/local/bin/
+
+    # randomer FE + sidecar + hcl
+    - src: files/randomer/frontend-randomer.hcl
+      dst: /etc/consul.d/frontend-randomer.hcl
+    - src: files/randomer/frontend-randomer.service
+      dst: /etc/systemd/system/frontend-randomer.service
+    - src: files/randomer/frontend-randomer-sidecar-proxy.service
+      dst: /etc/systemd/system/frontend-randomer-sidecar-proxy.service
+    - src: files/randomer/frontend-randomer
+      dst: /usr/local/bin/
+
+    # ingress service
+    - src: files/ingress/ingress-gateway.hcl
+      dst: /etc/consul.d/ingress-gateway.hcl
+    - src: files/ingress/ingress-gateway.service
+      dst: /etc/systemd/system/ingress-gateway.service
+  when: "node_alias == 'node1'"
+
+
+
+- name: Copy templates to (node2)
+  template: 
+    src: "{{ item.src }}"
+    dest: "{{ item.dst }}"
+    mode: 0755
+  loop:
+    - src: templates/client.hcl.j2
+      dst: /etc/consul.d/consul.hcl
+  when: "node_alias == 'node2'"
+
+- name: Copy files to (node2)
+  copy: 
+    src: "{{ item.src }}"
+    dest: "{{ item.dst }}"
+    mode: 0755
+  loop:
+    # birds BE + sidecar
+    - src: files/birds/backend.hcl
+      dst: /etc/consul.d/backend.hcl
+    - src: files/birds/backend.service
+      dst: /etc/systemd/system/backend.service
+    - src: files/birds/backend-sidecar-proxy.service
+      dst: /etc/systemd/system/backend-sidecar-proxy.service
+    - src: files/birds/backend
+      dst: /usr/local/bin/
+
+    # randomer BE + sidecar
+    - src: files/randomer/backend-randomer.hcl
+      dst: /etc/consul.d/backend-randomer.hcl
+    - src: files/randomer/backend-randomer.service
+      dst: /etc/systemd/system/backend-randomer.service
+    - src: files/randomer/backend-randomer-sidecar-proxy.service
+      dst: /etc/systemd/system/backend-randomer-sidecar-proxy.service
+    - src: files/randomer/backend-randomer
+      dst: /usr/local/bin/
+
+  when: "node_alias == 'node2'"

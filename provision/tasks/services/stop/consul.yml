@@ -1,0 +1,7 @@
+---
+# CONSUL
+- name: stop consul.service
+  systemd:
+    name: consul.service
+    state: stopped
+    daemon_reload: yes

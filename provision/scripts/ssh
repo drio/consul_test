@@ -1,0 +1,13 @@
+#!/bin/bash
+
+source $(dirname $0)/common.sh
+
+n=$1
+if [ ".$n" == "." ];then
+  echo "Need a server string"
+  exit 0
+fi
+
+[ "$n" == "server" ] && ssh ubuntu@$ip_server
+[ "$n" == "node1" ] && ssh ubuntu@$ip_node1
+[ "$n" == "node2" ] && ssh ubuntu@$ip_node2

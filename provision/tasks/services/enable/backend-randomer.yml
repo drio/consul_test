@@ -1,0 +1,17 @@
+---
+# BACKEND
+- name: enable backend-randomer.service
+  systemd:
+    name: backend-randomer
+    state: restarted
+    daemon_reload: yes
+    enabled: yes
+  when: "node_alias == 'node2'"
+
+- name: enable backend-randomer-sidecar-proxy.service
+  systemd:
+    name: backend-randomer-sidecar-proxy
+    state: restarted
+    daemon_reload: yes
+    enabled: yes
+  when: "node_alias == 'node2'"

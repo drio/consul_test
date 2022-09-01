@@ -1,0 +1,13 @@
+[Unit]
+Description="Frontend randomer sidecar proxy service"
+Requires=network-online.target frontend-randomer.service
+After=network-online.target frontend-randomer.service
+
+[Service]
+ExecStart=/usr/bin/consul connect envoy \
+  -sidecar-for frontend-randomer \
+  -admin-bind 127.0.0.1:19001
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

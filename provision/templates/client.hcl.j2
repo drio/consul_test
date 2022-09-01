@@ -1,0 +1,33 @@
+data_dir = "/opt/consul"
+datacenter       = "dc1"
+
+server           = false
+
+advertise_addr   = "{{ private_ip }}"
+client_addr      = "0.0.0.0"
+bind_addr        = "0.0.0.0"
+
+log_level = "INFO"
+enable_syslog = true
+leave_on_terminate = true
+ui               = false
+
+# TODO
+start_join       = ["{{ server_private_ip }}"]
+retry_join       = ["{{ server_private_ip }}"]
+
+ports {
+  grpc = 8502
+}
+
+connect {
+  enabled = true
+}
+
+encrypt = "{{ encrypt }}"
+encrypt_verify_incoming = true
+encrypt_verify_outgoing = true
+
+telemetry {
+  prometheus_retention_time = "30s"
+}

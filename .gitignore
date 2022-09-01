@@ -1,0 +1,16 @@
+infrastructure/.terraform
+infrastructure/*.tfstate
+infrastructure/*.tfstate.backup
+
+provision/hosts.ini
+Session.vim
+provision/config.two.yml
+provision/inventory.ini
+services/birdwatcher/bin
+services/randomer/bin
+services/randomer/bin/*
+services/birdwatcher/bin/*
+provision/files/birds/frontend
+provision/files/birds/backend
+provision/files/randomer/frontend-randomer
+provision/files/randomer/backend-randomer

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" type="image/png" href="/static/favicon.ico"/>
+    <title>Randomer</title>
+
+    <style>
+        body {
+            min-height: 100vh;
+            font-family: 'Rubik', sans-serif;
+            color: #828282;
+        }
+        main {
+          padding: 2%;
+        }
+    </style>
+
+    <script type="text/javascript">
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        function showData(number) {
+          document.getElementById("result").innerHTML = number
+          document.getElementById("button").innerHTML = "new"
+        }
+
+        async function newRandom(event) {
+            if (event) {
+                event.preventDefault()
+            }
+            showLoading()
+
+            fetch(`/random`, {
+               headers: {}
+            }).then(async (response) => {
+                try {
+                    await sleep(300)
+                    data = await response.json()
+                    showData(data.random)
+                } catch (e) {
+                    reportError("error")
+                }
+            }).catch(e => {
+               reportError("error in fetch()")
+          });
+        }
+
+    function showLoading() {
+        document.getElementById("button").innerHTML = `Loading...`
+    }
+    </script>
+</head>
+
+<body>
+  <main>
+    <button id="button" onclick="newRandom()">New</button>
+    <h3 id="result">Press 👆 to load something random</h3>
+    <p style="padding-top: 5px">
+    -drd
+    </p>
+  </main>
+</body>
+</html>

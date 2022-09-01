@@ -1,0 +1,17 @@
+---
+# BACKEND
+- name: enable backend.service
+  systemd:
+    name: backend
+    state: restarted
+    daemon_reload: yes
+    enabled: yes
+  when: "node_alias == 'node2'"
+
+- name: enable backend-sidecar-proxy.service
+  systemd:
+    name: backend-sidecar-proxy
+    state: restarted
+    daemon_reload: yes
+    enabled: yes
+  when: "node_alias == 'node2'"

@@ -1,0 +1,17 @@
+---
+# FRONTEND
+- name: enable frontend.service
+  systemd:
+    name: frontend
+    state: restarted
+    daemon_reload: yes
+    enabled: yes
+  when: "node_alias == 'node1'"
+
+- name: enable frontend-sidecar-proxy.service
+  systemd:
+    name: frontend-sidecar-proxy
+    state: restarted
+    daemon_reload: yes
+    enabled: yes
+  when: "node_alias == 'node1'"

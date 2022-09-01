@@ -1,0 +1,35 @@
+data_dir = "/opt/consul"
+
+server           = true
+bootstrap_expect = 1 
+
+advertise_addr   = "{{ private_ip }}"
+client_addr      = "0.0.0.0"
+bind_addr        = "0.0.0.0"
+
+#dns = "{{ private_ip }}"
+
+connect {
+  enabled = true
+}
+
+ui_config {
+  enabled = true
+}
+
+ports {
+  grpc = 8502
+}
+
+ui               = true
+datacenter       = "dc1"
+#retry_join       = ["172.16.1.101", "172.16.1.102", "172.16.1.103"]
+
+# FIXME
+encrypt = "{{ encrypt }}"
+encrypt_verify_incoming = true
+encrypt_verify_outgoing = true
+
+telemetry {
+  prometheus_retention_time = "30s"
+}
